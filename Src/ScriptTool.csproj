@@ -126,6 +126,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AlphabetRun.ico" />
+    <Content Include="ScriptTool.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
