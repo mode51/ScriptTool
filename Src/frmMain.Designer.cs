@@ -46,8 +46,7 @@
             this.mnuScriptsRun = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuWindowScripts = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnyHelp = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuHelpAbout = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuAbout = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuIconToggleWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuIconSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuIconSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -110,7 +109,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuScripts,
             this.mnuWindow,
-            this.mnyHelp});
+            this.mnuAbout});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(612, 24);
@@ -136,53 +135,53 @@
             // 
             this.mnuScriptsSave.Name = "mnuScriptsSave";
             this.mnuScriptsSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuScriptsSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuScriptsSave.Size = new System.Drawing.Size(138, 22);
             this.mnuScriptsSave.Text = "&Save";
             this.mnuScriptsSave.Click += new System.EventHandler(this.mnuScriptsSave_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(135, 6);
             // 
             // mnuScriptsAdd
             // 
             this.mnuScriptsAdd.Name = "mnuScriptsAdd";
-            this.mnuScriptsAdd.Size = new System.Drawing.Size(152, 22);
+            this.mnuScriptsAdd.Size = new System.Drawing.Size(138, 22);
             this.mnuScriptsAdd.Text = "&Add";
             this.mnuScriptsAdd.Click += new System.EventHandler(this.mnuScriptsAdd_Click);
             // 
             // mnuScriptsRemove
             // 
             this.mnuScriptsRemove.Name = "mnuScriptsRemove";
-            this.mnuScriptsRemove.Size = new System.Drawing.Size(152, 22);
+            this.mnuScriptsRemove.Size = new System.Drawing.Size(138, 22);
             this.mnuScriptsRemove.Text = "&Remove";
             this.mnuScriptsRemove.Click += new System.EventHandler(this.mnuScriptsRemove_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(135, 6);
             // 
             // mnuScriptRename
             // 
             this.mnuScriptRename.Name = "mnuScriptRename";
             this.mnuScriptRename.ShortcutKeys = System.Windows.Forms.Keys.F2;
-            this.mnuScriptRename.Size = new System.Drawing.Size(152, 22);
+            this.mnuScriptRename.Size = new System.Drawing.Size(138, 22);
             this.mnuScriptRename.Text = "R&ename";
             this.mnuScriptRename.Click += new System.EventHandler(this.mnuScriptRename_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(135, 6);
             // 
             // mnuScriptsRun
             // 
             this.mnuScriptsRun.Enabled = false;
             this.mnuScriptsRun.Name = "mnuScriptsRun";
             this.mnuScriptsRun.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.mnuScriptsRun.Size = new System.Drawing.Size(152, 22);
+            this.mnuScriptsRun.Size = new System.Drawing.Size(138, 22);
             this.mnuScriptsRun.Text = "R&un";
             this.mnuScriptsRun.Click += new System.EventHandler(this.mnuScriptsRun_Click);
             // 
@@ -202,20 +201,12 @@
             this.mnuWindowScripts.Text = "&Switch Panels";
             this.mnuWindowScripts.Click += new System.EventHandler(this.mnuWindowScripts_Click);
             // 
-            // mnyHelp
+            // mnuAbout
             // 
-            this.mnyHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuHelpAbout});
-            this.mnyHelp.Name = "mnyHelp";
-            this.mnyHelp.Size = new System.Drawing.Size(44, 20);
-            this.mnyHelp.Text = "&Help";
-            // 
-            // mnuHelpAbout
-            // 
-            this.mnuHelpAbout.Name = "mnuHelpAbout";
-            this.mnuHelpAbout.Size = new System.Drawing.Size(166, 22);
-            this.mnuHelpAbout.Text = "&About Script Tool";
-            this.mnuHelpAbout.Click += new System.EventHandler(this.mnuHelpAbout_Click);
+            this.mnuAbout.Name = "mnuAbout";
+            this.mnuAbout.Size = new System.Drawing.Size(52, 20);
+            this.mnuAbout.Text = "&About";
+            this.mnuAbout.Click += new System.EventHandler(this.mnuAbout_Click);
             // 
             // mnuIconToggleWindow
             // 
@@ -276,8 +267,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuScriptRename;
         private System.Windows.Forms.ToolStripMenuItem mnuWindow;
         private System.Windows.Forms.ToolStripMenuItem mnuWindowScripts;
-        private System.Windows.Forms.ToolStripMenuItem mnyHelp;
-        private System.Windows.Forms.ToolStripMenuItem mnuHelpAbout;
+        private System.Windows.Forms.ToolStripMenuItem mnuAbout;
         private System.Windows.Forms.ToolStripMenuItem mnuScriptsSave;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

@@ -22,5 +22,10 @@ namespace ScriptTool
                 Close();
             base.OnPreviewKeyDown(e);
         }
+
+        private void lblScriptToolOnGitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/mode51/ScriptTool");
+        }
     }
 }

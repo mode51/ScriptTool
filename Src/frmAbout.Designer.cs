@@ -35,6 +35,7 @@
             this.btnClose = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.lblScriptToolOnGitHub = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label1
@@ -42,7 +43,7 @@
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.Location = new System.Drawing.Point(12, 112);
+            this.label1.Location = new System.Drawing.Point(12, 125);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(357, 42);
             this.label1.TabIndex = 0;
@@ -64,7 +65,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(102, 209);
+            this.label3.Location = new System.Drawing.Point(102, 46);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(176, 13);
             this.label3.TabIndex = 2;
@@ -73,7 +74,7 @@
             // btnClose
             // 
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(153, 166);
+            this.btnClose.Location = new System.Drawing.Point(153, 196);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 3;
@@ -82,7 +83,7 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(15, 64);
+            this.label4.Location = new System.Drawing.Point(12, 90);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(354, 35);
             this.label4.TabIndex = 4;
@@ -98,12 +99,24 @@
             this.label5.TabIndex = 5;
             this.label5.Text = "v1.0.0";
             // 
+            // lblScriptToolOnGitHub
+            // 
+            this.lblScriptToolOnGitHub.AutoSize = true;
+            this.lblScriptToolOnGitHub.Location = new System.Drawing.Point(95, 59);
+            this.lblScriptToolOnGitHub.Name = "lblScriptToolOnGitHub";
+            this.lblScriptToolOnGitHub.Size = new System.Drawing.Size(191, 13);
+            this.lblScriptToolOnGitHub.TabIndex = 6;
+            this.lblScriptToolOnGitHub.TabStop = true;
+            this.lblScriptToolOnGitHub.Text = "https://github.com/mode51/ScriptTool";
+            this.lblScriptToolOnGitHub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblScriptToolOnGitHub_LinkClicked);
+            // 
             // frmAbout
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
             this.ClientSize = new System.Drawing.Size(381, 231);
+            this.Controls.Add(this.lblScriptToolOnGitHub);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnClose);
@@ -128,5 +141,6 @@
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.LinkLabel lblScriptToolOnGitHub;
     }
 }

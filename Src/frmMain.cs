@@ -19,13 +19,24 @@ namespace ScriptTool
             public string Name { get; set; }
             public string Script { get; set; }
         }
-        public class Settings
+        public class Version1Settings
         {
             public List<ScriptItem> Scripts { get; set; } = new List<ScriptItem>();
+        }
+        public class Settings
+        {
+            public Version1Settings V1 { get; set; } = new Version1Settings();
+        }
+        private class ScriptThread
+        {
+            public ScriptItem Script { get; set; }
+            public W.Threading.Thread Thread { get; set; }
+            public System.Threading.CancellationTokenSource Cts { get; set; } = new System.Threading.CancellationTokenSource();
         }
         private Settings _settings = new Settings();
         private bool _forceClose = false;
         private ScintillaNET.Scintilla _editor;
+        private List<ScriptThread> _threads = new List<ScriptThread>();
 
         private ScriptItem CurrentScript
         {
@@ -72,6 +83,7 @@ namespace ScriptTool
             else
             {
                 SaveSettings();
+                TerminateAllThreads();
             }
             base.OnClosing(e);
         }
@@ -80,7 +92,7 @@ namespace ScriptTool
         private void BuildIconMenu()
         {
             mnuIcon.Items.Clear();
-            foreach (var script in _settings.Scripts.OrderByDescending(item => item.Name))
+            foreach (var script in _settings.V1.Scripts.OrderByDescending(item => item.Name))
             {
                 mnuIcon.Items.Add(script.Name, null, (o, e) => { RunScript(script); });
             }
@@ -95,25 +107,31 @@ namespace ScriptTool
         }
         #endregion
 
+        #region Private Methods
+        private void TerminateAllThreads()
+        {
+            //if all threads exited propertyly, there shouldn't be any threads to close here
+            foreach (var thread in _threads)
+            {
+                try
+                {
+                    thread.Cts.Cancel();
+                    if (!thread.Thread.Join(1000))
+                        thread.Thread.Cancel(4000);
+                }
+                catch { }
+            }
+            _threads.Clear();
+        }
         private string EditorScript
         {
             get
             {
                 return _editor.Text;
-                //return SyntaxEditor.Document.CurrentSnapshot.GetText();
             }
             set
             {
                 _editor.Text = value;
-                //if (SyntaxEditor.Document == null)
-                //{
-                //    TextDocument document = new TextDocument();
-                //    //document.InitializeText(value);
-                //    document.Language = new CSharpLanguage();
-                //    SyntaxEditor.Document = document;
-                //}
-                //SyntaxEditor.Document.InitializeText(value);
-                ////SyntaxEditor.Document = document;
             }
         }
         private void ToggleVisibility()
@@ -140,7 +158,24 @@ namespace ScriptTool
 
                     var asm = CSScriptLibrary.CSScript.LoadMethod(script.Script);
                     var cs = asm.GetStaticMethod();// "Main");
-                    Task.Run(() => { cs.Invoke(); });
+                    var sc = new ScriptThread() { Script = script };
+                    sc.Thread = W.Threading.Thread.Create(cts =>
+                    {
+                        try
+                        {
+                            cs.Invoke();
+                        }
+                        catch { }
+                    }, (r, e) =>
+                    {
+                        try
+                        {
+                            _threads.Remove(sc);
+                        }
+                        catch { }
+                    }, sc.Cts);
+                    _threads.Add(sc);
+                    //Task.Run(() => { cs.Invoke(); });
                     //cs.ShowMessage();
                 }
                 catch (csscript.CompilerException e)
@@ -165,7 +200,7 @@ namespace ScriptTool
             index = lstScripts.SelectedIndex;
             lstScripts.BeginUpdate();
             lstScripts.Items.Clear();
-            foreach (var item in _settings.Scripts)
+            foreach (var item in _settings.V1.Scripts)
             {
                 lstScripts.Items.Add(item);
             }
@@ -177,7 +212,7 @@ namespace ScriptTool
             var newScript = new ScriptItem();
             newScript.Name = name;
             newScript.Script = script;
-            _settings.Scripts.Add(newScript);
+            _settings.V1.Scripts.Add(newScript);
 
             var newIndex = lstScripts.Items.Add(newScript);
             if (select)
@@ -192,8 +227,6 @@ namespace ScriptTool
         }
         private void SaveSettings()
         {
-            //await Task.Run(() =>
-            //{
             var filename = GetSettingsFilename();
             try
             {
@@ -207,7 +240,6 @@ namespace ScriptTool
                     MessageBox.Show(e.ToString(), "Script Tool", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 });
             }
-            //});
         }
         private void LoadSettings()
         {
@@ -227,11 +259,11 @@ namespace ScriptTool
                 });
             }
         }
+        #endregion
 
+        #region Menu Handlers
         private void lstScripts_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //txtScript.Text = CurrentScript?.Script;
-            //EditorScript = CurrentScript?.Script ?? "";
             EditorScript = CurrentScript?.Script ?? "";
             mnuScriptsRun.Enabled = CurrentScript != null;
         }
@@ -258,7 +290,7 @@ namespace ScriptTool
             if (string.IsNullOrEmpty(scriptName))
                 return;
             var methodName = scriptName.Replace(' ', '_');
-            var script = string.Format("// The first static method is the script entry point.\n// You can add usings statements and additional static methods.\n// You cannot add namespaces and classes.\n\nusing System.Windows.Forms;\n\npublic static void {0}()\n{{\n\tMessageBox.Show(\"Hello World\", \"Script Tool\");\n\n}}\n", methodName);
+            var script = string.Format("// The first static method is the script entry point.\n// You may add usings statements, additional static methods and classes.\n// You may not add namespaces.\n\nusing System.Windows.Forms;\n\npublic static void {0}()\n{{\n\tMessageBox.Show(\"Hello World\", \"Script Tool\");\n\n}}\n", methodName);
             AddScript(scriptName, script, true);
             SaveSettings();
         }
@@ -270,7 +302,7 @@ namespace ScriptTool
                 var script = (ScriptItem)lstScripts.Items[index];
 
                 lstScripts.Items.RemoveAt(index);
-                _settings.Scripts.Remove(script);
+                _settings.V1.Scripts.Remove(script);
             }
         }
         private void mnuScriptRename_Click(object sender, EventArgs e)
@@ -297,10 +329,11 @@ namespace ScriptTool
             else
                 lstScripts.Select();
         }
-        private void mnuHelpAbout_Click(object sender, EventArgs e)
+        private void mnuAbout_Click(object sender, EventArgs e)
         {
             using (var dlg = new frmAbout())
                 dlg.ShowDialog();
         }
+        #endregion
     }
 }
