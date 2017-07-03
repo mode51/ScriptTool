@@ -3,7 +3,7 @@ Script Tool is an automation tool.  It allows the user to create scripts in C# a
 
 To load the Installer project you will need to have previously installed the Microsoft Visual Studio 2017 Installer Projects package.  If you don't have it, you can download it [here](https://marketplace.visualstudio.com/items?itemName=VisualStudioProductTeam.MicrosoftVisualStudio2017InstallerProjects).
 
-Scripts are currently run in a short-running task.  In the future, I may change this to a thread to allow for more complex scripts.
+Scripts are run in a background thread to allow for more complex scripts.  They are also tracked and terminated forcefully if still running when the application closes.
 
 #### Thanks
 A mighty thanks to these two guys. Without these two projects, ScriptTool wouldn't exist.
