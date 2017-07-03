@@ -68,6 +68,7 @@ namespace ScriptTool
             _editor = new ScintillaNET.Scintilla();
             _editor.BorderStyle = BorderStyle.None;
             _editor.Dock = DockStyle.Fill;
+            _editor.Enabled = false;
             splitContainer1.Panel2.Controls.Add(_editor);
             _editor.CaretForeColor = System.Drawing.Color.White;
             Helpers.InitHotkeys(this, _editor);
@@ -111,8 +112,9 @@ namespace ScriptTool
         private void TerminateAllThreads()
         {
             //if all threads exited propertyly, there shouldn't be any threads to close here
-            foreach (var thread in _threads)
+            while(_threads.Count > 0)
             {
+                var thread = _threads[0];
                 try
                 {
                     thread.Cts.Cancel();
@@ -138,13 +140,42 @@ namespace ScriptTool
         {
             this.Visible = !this.Visible;
         }
-        private void RunCurrentScript()
+        private void TogglePanelSelection()
         {
-            if (CurrentScript == null)
+            if (this.splitContainer1.ActiveControl == lstScripts)
+                _editor.Select();
+            else
+                lstScripts.Select();
+        }
+        private void ShowScripts()
+        {
+            var selectedItem = lstScripts.SelectedItem;
+            lstScripts.BeginUpdate();
+            lstScripts.Items.Clear();
+            foreach (var item in _settings.V1.Scripts)
+            {
+                lstScripts.Items.Add(item);
+            }
+            lstScripts.SelectedItem = selectedItem;
+            lstScripts.EndUpdate();
+        }
+        private void AddScript()
+        {
+            var scriptName = Microsoft.VisualBasic.Interaction.InputBox("Please enter a name for this script", "New Script");
+            if (string.IsNullOrEmpty(scriptName))
                 return;
-            CurrentScript.Script = EditorScript;
-            SaveSettings();
-            RunScript(CurrentScript);
+            var methodName = scriptName.Replace(' ', '_');
+            var script = string.Format("// The first static method is the script entry point.\n// You may add usings statements, additional static methods and classes.\n// You may not add namespaces.\n\nusing System.Windows.Forms;\n\npublic static void {0}()\n{{\n\tMessageBox.Show(\"Hello World\", \"Script Tool\");\n}}\n", methodName);
+
+            var newScript = new ScriptItem();
+            newScript.Name = scriptName;
+            newScript.Script = script;
+            _settings.V1.Scripts.Add(newScript);
+
+            lstScripts.Items.Add(newScript);
+            lstScripts.SelectedItem = newScript;
+            _editor.Select();
+            BuildIconMenu();
         }
         private void RunScript(ScriptItem script)
         {
@@ -194,30 +225,42 @@ namespace ScriptTool
                 }
             }
         }
-        private void ShowScripts()
+        private void RunCurrentScript()
         {
-            int index = -1;
-            index = lstScripts.SelectedIndex;
-            lstScripts.BeginUpdate();
-            lstScripts.Items.Clear();
-            foreach (var item in _settings.V1.Scripts)
-            {
-                lstScripts.Items.Add(item);
-            }
-            lstScripts.SelectedIndex = index;
-            lstScripts.EndUpdate();
+            if (CurrentScript == null)
+                return;
+            CurrentScript.Script = EditorScript;
+            SaveSettings();
+            RunScript(CurrentScript);
         }
-        private void AddScript(string name, string script, bool select)
+        private void RenameCurrentScript()
         {
-            var newScript = new ScriptItem();
-            newScript.Name = name;
-            newScript.Script = script;
-            _settings.V1.Scripts.Add(newScript);
+            if (lstScripts.SelectedItem == null)
+                return;
+            var newName = Microsoft.VisualBasic.Interaction.InputBox("Enter a new name for this script", "Script Tool", CurrentScript.Name);
+            if (!string.IsNullOrEmpty(newName))
+            {
+                var selectedItem = lstScripts.SelectedItem;
+                CurrentScript.Name = newName;
+                ShowScripts();
+                lstScripts.SelectedItem = selectedItem;
+            }
+        }
+        private void RemoveCurrentScript()
+        {
+            var selectedIndex = lstScripts.SelectedIndex;
+            for (int t = lstScripts.SelectedIndices.Count - 1; t >= 0; t--)
+            {
+                var index = lstScripts.SelectedIndices[t];
+                var script = (ScriptItem)lstScripts.Items[index];
 
-            var newIndex = lstScripts.Items.Add(newScript);
-            if (select)
-                lstScripts.SelectedIndex = newIndex;
-            BuildIconMenu();
+                lstScripts.Items.RemoveAt(index);
+                _settings.V1.Scripts.Remove(script);
+            }
+            if (lstScripts.Items.Count > 0)
+                lstScripts.SelectedIndex = Math.Max(selectedIndex - 1, 0);
+            else
+                lstScripts.ClearSelected();
         }
         private string GetSettingsFilename()
         {
@@ -266,6 +309,7 @@ namespace ScriptTool
         {
             EditorScript = CurrentScript?.Script ?? "";
             mnuScriptsRun.Enabled = CurrentScript != null;
+            _editor.Enabled = lstScripts.SelectedItem != null;
         }
         private void lstScripts_MouseClick(object sender, MouseEventArgs e)
         {
@@ -286,37 +330,16 @@ namespace ScriptTool
         }
         private void mnuScriptsAdd_Click(object sender, EventArgs e)
         {
-            var scriptName = Microsoft.VisualBasic.Interaction.InputBox("Please enter a name for this script", "New Script");
-            if (string.IsNullOrEmpty(scriptName))
-                return;
-            var methodName = scriptName.Replace(' ', '_');
-            var script = string.Format("// The first static method is the script entry point.\n// You may add usings statements, additional static methods and classes.\n// You may not add namespaces.\n\nusing System.Windows.Forms;\n\npublic static void {0}()\n{{\n\tMessageBox.Show(\"Hello World\", \"Script Tool\");\n\n}}\n", methodName);
-            AddScript(scriptName, script, true);
+            AddScript();
             SaveSettings();
         }
         private void mnuScriptsRemove_Click(object sender, EventArgs e)
         {
-            for (int t = lstScripts.SelectedIndices.Count - 1; t >= 0; t--)
-            {
-                var index = lstScripts.SelectedIndices[t];
-                var script = (ScriptItem)lstScripts.Items[index];
-
-                lstScripts.Items.RemoveAt(index);
-                _settings.V1.Scripts.Remove(script);
-            }
+            RemoveCurrentScript();
         }
         private void mnuScriptRename_Click(object sender, EventArgs e)
         {
-            if (lstScripts.SelectedIndex < 0)
-                return;
-            var newName = Microsoft.VisualBasic.Interaction.InputBox("Enter a new name for this script", "Script Tool", CurrentScript.Name);
-            if (!string.IsNullOrEmpty(newName))
-            {
-                var selectedIndex = lstScripts.SelectedIndex;
-                CurrentScript.Name = newName;
-                ShowScripts();
-                lstScripts.SelectedIndex = selectedIndex;
-            }
+            RenameCurrentScript();
         }
         private void mnuScriptsRun_Click(object sender, EventArgs e)
         {
@@ -324,10 +347,7 @@ namespace ScriptTool
         }
         private void mnuWindowScripts_Click(object sender, EventArgs e)
         {
-            if (this.splitContainer1.ActiveControl == lstScripts)
-                _editor.Select();
-            else
-                lstScripts.Select();
+            TogglePanelSelection();
         }
         private void mnuAbout_Click(object sender, EventArgs e)
         {

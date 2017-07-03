@@ -83,7 +83,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.lstScripts);
-            this.splitContainer1.Size = new System.Drawing.Size(612, 358);
+            this.splitContainer1.Size = new System.Drawing.Size(784, 537);
             this.splitContainer1.SplitterDistance = 204;
             this.splitContainer1.TabIndex = 0;
             // 
@@ -98,7 +98,8 @@
             this.lstScripts.FormattingEnabled = true;
             this.lstScripts.Location = new System.Drawing.Point(0, 0);
             this.lstScripts.Name = "lstScripts";
-            this.lstScripts.Size = new System.Drawing.Size(204, 358);
+            this.lstScripts.Size = new System.Drawing.Size(204, 537);
+            this.lstScripts.Sorted = true;
             this.lstScripts.TabIndex = 3;
             this.lstScripts.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lstScripts_MouseClick);
             this.lstScripts.SelectedIndexChanged += new System.EventHandler(this.lstScripts_SelectedIndexChanged);
@@ -112,7 +113,7 @@
             this.mnuAbout});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(612, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(784, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -232,7 +233,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(612, 382);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
