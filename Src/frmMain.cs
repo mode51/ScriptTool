@@ -336,6 +336,7 @@ namespace ScriptTool
         private void mnuScriptsRemove_Click(object sender, EventArgs e)
         {
             RemoveCurrentScript();
+            BuildIconMenu();
         }
         private void mnuScriptRename_Click(object sender, EventArgs e)
         {
