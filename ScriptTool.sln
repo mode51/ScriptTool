@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptTool", "Src\ScriptToo
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ScriptToolInstaller", "Installer\ScriptToolInstaller.vdproj", "{55AFE29E-C63D-4B45-9860-3DE9235AEBA5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{01A70633-8606-40E0-8144-AD819572257B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
